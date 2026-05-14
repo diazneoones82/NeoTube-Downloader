@@ -1,0 +1,81 @@
+{
+  "configVersion": 1,
+  "timestamp": 1778734223803,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/custom-service-worker.js",
+        "/favicon.ico",
+        "/main-ZVXH3KV7.js",
+        "/manifest.webmanifest",
+        "/polyfills-GXGV2O5Q.js",
+        "/styles-SFUE2ZSJ.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/assets/icons/android-chrome-192x192.png",
+        "/assets/icons/android-chrome-384x384.png",
+        "/assets/icons/apple-touch-icon.png",
+        "/assets/icons/browserconfig.xml",
+        "/assets/icons/favicon-16x16.png",
+        "/assets/icons/favicon-32x32.png",
+        "/assets/icons/favicon.ico",
+        "/assets/icons/mstile-150x150.png",
+        "/assets/icons/safari-pinned-tab.svg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/icons/android-chrome-192x192.png": "dc0a4247556a1e1369fb95e01af519f4d0275cd7",
+    "/assets/icons/android-chrome-384x384.png": "f4f563539b4d4b85c119cc5872453b3ac4810c84",
+    "/assets/icons/apple-touch-icon.png": "03708ea3ab900548e264cef67d77c895bd05b52d",
+    "/assets/icons/browserconfig.xml": "8cd143491cee2842ac6050f9f0dd10bd60f1c277",
+    "/assets/icons/favicon-16x16.png": "386b0ac9e1f514e0d0714750c771a51af64ed748",
+    "/assets/icons/favicon-32x32.png": "3820321427dffb7655b3f00ab79c17dbaab0be27",
+    "/assets/icons/favicon.ico": "f3d197a314e1e61a048a7377cd7e19d03f5c12c8",
+    "/assets/icons/mstile-150x150.png": "28f817af376ed87625b988ddd368f26e31d7e365",
+    "/assets/icons/safari-pinned-tab.svg": "2f88e8e43322a2bb4097fce62335ae841d078d99",
+    "/custom-service-worker.js": "b07dc99142e8670dbf54bc91c2bb492f0256a82d",
+    "/favicon.ico": "f3d197a314e1e61a048a7377cd7e19d03f5c12c8",
+    "/main-ZVXH3KV7.js": "3e946517c30378994b703c3334ec317eef7f530e",
+    "/manifest.webmanifest": "6aecdc2aee2ae061804e7a97f285b733dd94b158",
+    "/polyfills-GXGV2O5Q.js": "8eec50a8a12bc00c2ad54ba4f71e5da88a406e5c",
+    "/styles-SFUE2ZSJ.css": "e6bd22cd8431412188de00432d62e333bd1855e2"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
