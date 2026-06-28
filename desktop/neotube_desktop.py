@@ -49,27 +49,38 @@ STARTUP_HTML = """<!doctype html>
       margin: 0;
       min-height: 100vh;
       font-family: "Segoe UI", Arial, sans-serif;
-      color: #17202a;
-      background: #f5f7fb;
+      color: #cccccc;
+      background: #1e1e1e;
       display: grid;
       place-items: center;
+      border: 1px solid #007acc;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
     main {
       width: min(720px, calc(100vw - 48px));
-      background: #fff;
-      border: 1px solid #d8dee9;
+      background: #252526;
+      border: 1px solid #3c3c3c;
       border-radius: 8px;
       padding: 28px;
-      box-shadow: 0 18px 46px rgba(26, 35, 50, 0.12);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.38);
+      position: relative;
+      overflow: hidden;
+    }
+    main::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      background: linear-gradient(90deg, #007acc, #3794ff, #c586c0);
     }
     h1 { margin: 0 0 8px; font-size: 24px; font-weight: 650; }
-    p { margin: 0 0 22px; color: #526070; line-height: 1.45; }
+    p { margin: 0 0 22px; color: #9cdcfe; line-height: 1.45; }
     label {
       display: block;
       margin-bottom: 8px;
       font-size: 13px;
       font-weight: 650;
-      color: #344256;
+      color: #cccccc;
     }
     .row {
       display: grid;
@@ -80,17 +91,19 @@ STARTUP_HTML = """<!doctype html>
     input {
       width: 100%;
       height: 40px;
-      border: 1px solid #c4ccda;
+      border: 1px solid #3c3c3c;
       border-radius: 6px;
       padding: 0 12px;
       font-size: 14px;
+      background: #1e1e1e;
+      color: #d4d4d4;
     }
     button {
       height: 40px;
-      border: 1px solid #bcc6d5;
+      border: 1px solid #3c3c3c;
       border-radius: 6px;
-      background: #fff;
-      color: #1f2a3a;
+      background: #2d2d30;
+      color: #d4d4d4;
       font-weight: 650;
       padding: 0 16px;
       cursor: pointer;
@@ -111,7 +124,7 @@ STARTUP_HTML = """<!doctype html>
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: #526070;
+      color: #cccccc;
       font-size: 13px;
     }
     .check input {

@@ -5,6 +5,14 @@ struct ContentView: View {
     @State private var draftURL = ""
     @State private var showingBrowser = false
 
+    private var platformLabel: String {
+        #if targetEnvironment(macCatalyst)
+        return "NEO Apps : Mac"
+        #else
+        return "NEO Apps : iOS"
+        #endif
+    }
+
     var body: some View {
         Group {
             if showingBrowser, let url = URL(string: serverURL), !serverURL.isEmpty {
@@ -28,12 +36,12 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("NeoTube Downloader")
                         .font(.largeTitle.bold())
-                    Text("NEO Apps : iOS")
+                    Text(platformLabel)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
 
-                Text("Enter the NeoTube server URL to open the downloader on this iPhone.")
+                Text("Enter the NeoTube server URL to open the downloader on this device.")
                     .foregroundStyle(.secondary)
 
                 TextField("Server URL", text: $draftURL)

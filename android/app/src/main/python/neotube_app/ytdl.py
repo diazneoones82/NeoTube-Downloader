@@ -16,6 +16,7 @@ import logging
 import re
 import types
 from typing import Any, Optional
+from urllib.parse import parse_qs, urlparse
 
 import yt_dlp.networking.impersonate
 from yt_dlp.utils import STR_FORMAT_RE_TMPL, STR_FORMAT_TYPES
@@ -25,6 +26,31 @@ from state_store import AtomicJsonStore, from_json_compatible, read_legacy_shelf
 from subscriptions import _entry_id
 
 log = logging.getLogger('ytdl')
+
+
+def _should_extract_playlist(url: str) -> bool:
+    """Return True when a user-provided URL is explicitly a playlist URL.
+
+    yt-dlp's ``noplaylist`` option is useful for plain video URLs, but it also
+    collapses YouTube playlist URLs to the first video when a ``list=`` query
+    parameter is present. NeoTube should expand those playlist URLs into the
+    queue while keeping normal single-video links as single downloads.
+    """
+    parsed = urlparse(str(url or ""))
+    host = parsed.netloc.lower()
+    query = parse_qs(parsed.query)
+    playlist_ids = [item for item in query.get("list", []) if item]
+    if not playlist_ids:
+        return False
+
+    is_youtube = any(
+        domain in host
+        for domain in ("youtube.com", "music.youtube.com", "youtu.be", "youtube-nocookie.com")
+    )
+    if is_youtube:
+        return True
+
+    return "playlist" in parsed.path.lower()
 
 
 # Characters that are invalid in Windows/NTFS path components. These are pre-
@@ -908,9 +934,10 @@ class DownloadQueue:
         opts.update(ytdl_options_overrides or {})
         return opts
 
-    def __extract_info(self, url, ytdl_options_presets=None, ytdl_options_overrides=None):
+    def __extract_info(self, url, ytdl_options_presets=None, ytdl_options_overrides=None, playlist_item_limit=0):
         debug_logging = logging.getLogger().isEnabledFor(logging.DEBUG)
         user_opts = self._build_ytdl_options(ytdl_options_presets, ytdl_options_overrides)
+        extract_playlist = _should_extract_playlist(url)
         params = {
             **user_opts,
             'quiet': not debug_logging,
@@ -918,9 +945,11 @@ class DownloadQueue:
             'no_color': True,
             'extract_flat': True,
             'ignore_no_formats_error': True,
-            'noplaylist': True,
+            'noplaylist': not extract_playlist,
             'paths': {"home": self.config.DOWNLOAD_DIR, "temp": self.config.TEMP_DIR},
         }
+        if extract_playlist and int(playlist_item_limit or 0) > 0:
+            params['playlistend'] = int(playlist_item_limit)
         imp = user_opts.get('impersonate')
         if imp is not None:
             params['impersonate'] = yt_dlp.networking.impersonate.ImpersonateTarget.from_str(imp)
@@ -1165,7 +1194,13 @@ class DownloadQueue:
         try:
             entry = await asyncio.get_running_loop().run_in_executor(
                 None,
-                partial(self.__extract_info, url, ytdl_options_presets, ytdl_options_overrides),
+                partial(
+                    self.__extract_info,
+                    url,
+                    ytdl_options_presets,
+                    ytdl_options_overrides,
+                    playlist_item_limit,
+                ),
             )
         except yt_dlp.utils.YoutubeDLError as exc:
             return {'status': 'error', 'msg': str(exc)}
