@@ -354,6 +354,89 @@ async def test_extract_info_neotube_extract_keys_win_over_preset(dq_env):
 
 
 @pytest.mark.asyncio
+async def test_youtube_playlist_extracts_full_playlist_and_applies_limit(dq_env):
+    captured_params: list = []
+
+    class FakeYoutubeDL:
+        def __init__(self, params=None):
+            captured_params.append(params)
+
+        def extract_info(self, url, download=False):
+            return {
+                "_type": "playlist",
+                "id": "PL123",
+                "title": "Playlist",
+                "entries": [
+                    {"id": "vid1", "title": "One", "url": "https://example.com/one"},
+                    {"id": "vid2", "title": "Two", "url": "https://example.com/two"},
+                ],
+            }
+
+    notifier = AsyncMock()
+    dq = DownloadQueue(dq_env, notifier)
+    with patch("ytdl.yt_dlp.YoutubeDL", FakeYoutubeDL):
+        result = await dq.add(
+            "https://www.youtube.com/playlist?list=PL123",
+            "audio",
+            "auto",
+            "mp3",
+            "best",
+            "",
+            "",
+            25,
+            auto_start=False,
+        )
+
+    assert result["status"] == "ok"
+    assert captured_params[0]["extract_flat"] is True
+    assert captured_params[0]["noplaylist"] is False
+    assert captured_params[0]["playlistend"] == 25
+    assert dq.pending.exists("https://example.com/one")
+    assert dq.pending.exists("https://example.com/two")
+
+
+@pytest.mark.asyncio
+async def test_youtube_watch_url_with_list_queues_playlist_entries(dq_env):
+    captured_params: list = []
+
+    class FakeYoutubeDL:
+        def __init__(self, params=None):
+            captured_params.append(params)
+
+        def extract_info(self, url, download=False):
+            return {
+                "_type": "playlist",
+                "id": "PL456",
+                "title": "Music Playlist",
+                "entries": [
+                    {"id": "song1", "title": "Song 1", "url": "https://example.com/song1"},
+                    {"id": "song2", "title": "Song 2", "url": "https://example.com/song2"},
+                    {"id": "song3", "title": "Song 3", "url": "https://example.com/song3"},
+                ],
+            }
+
+    notifier = AsyncMock()
+    dq = DownloadQueue(dq_env, notifier)
+    with patch("ytdl.yt_dlp.YoutubeDL", FakeYoutubeDL):
+        result = await dq.add(
+            "https://www.youtube.com/watch?v=song1&list=PL456",
+            "audio",
+            "auto",
+            "mp3",
+            "best",
+            "",
+            "",
+            0,
+            auto_start=False,
+        )
+
+    assert result["status"] == "ok"
+    assert captured_params[0]["noplaylist"] is False
+    assert "playlistend" not in captured_params[0]
+    assert len(dq.pending.dict) == 3
+
+
+@pytest.mark.asyncio
 async def test_add_sets_clip_bounds_on_download_info(dq_env):
     notifier = AsyncMock()
 
