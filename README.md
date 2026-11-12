@@ -95,3 +95,9 @@ uv run pytest app/tests/
 NeoTube Downloader depends on `yt-dlp`, so keeping the Python dependencies current is important when video sites change.
 
 Contributor: diazneoones82
+
+## License
+
+Original code, documentation, and assets owned by this project's author are licensed under the GNU General Public License, version 3 or (at your option) any later version (**GPL-3.0-or-later**). See [LICENSE](LICENSE). This software is provided without any warranty.
+
+Third-party and inherited code retain their existing licenses. The previous AGPLv3 license text is preserved in [LICENSE-AGPL](LICENSE-AGPL); any upstream AGPL-covered code remains under AGPL, including its requirements for combined or modified works. This GPL grant does not replace third-party permissions or relicense upstream code.
